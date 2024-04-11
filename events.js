@@ -5,8 +5,16 @@
 // EventEmiiter kind of standard name
 const EventEmitter = require("events");
 
+// best practice is create a new class then inherit from the node EventEmitter
+// parent is sales, superclass is EventEmitter
+class Sales extends EventEmitter {
+    constructor() {
+        super(); // get access to all the methods of the parent class (EvnetEmitter)
+    }
+}
+
 // create instance
-const myEmitter = new EventEmitter();
+const myEmitter = new Sales();
 
 // create listener (ovserve the emitter) wait for emit the newSale event
 myEmitter.on("newSale", () => {
