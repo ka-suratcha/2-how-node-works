@@ -20,6 +20,11 @@
 
 const fs = require("fs");
 
+// all func from this will be offloaded auto matically by the event loop to the thread pool
+const crypto = require("crypto");
+
+const start = Date.now();
+
 // ---- no paricular order cuz not i a I/O cycle, not running inside eventloop -> not running inside of any callback func
 setTimeout(() => console.log("Timer 1 finished"), 0);
 setImmediate(() => console.log("Immediate 1 finsihed"));
@@ -37,6 +42,21 @@ fs.readFile("test-file.txt", () => {
     setTimeout(() => console.log("Timer 3 finished"), 3000);
     setImmediate(() => console.log("Immediate 2 finsihed"));
     process.nextTick(() => console.log("Process.nextTick"));
+
+    // should tank approximatrly the same amount of time
+    // default size of thread pool is 4 -> that y 4 pwd encryption take same time and happen all at the same time
+    crypto.pbkdf2("password", "salt", 10000, 1024, "sha512", () => {
+        console.log(Date.now() - start, "Password encrypted");
+    });
+    crypto.pbkdf2("password", "salt", 10000, 1024, "sha512", () => {
+        console.log(Date.now() - start, "Password encrypted");
+    });
+    crypto.pbkdf2("password", "salt", 10000, 1024, "sha512", () => {
+        console.log(Date.now() - start, "Password encrypted");
+    });
+    crypto.pbkdf2("password", "salt", 10000, 1024, "sha512", () => {
+        console.log(Date.now() - start, "Password encrypted");
+    });
 });
 
 console.log("Hello from the top-level code (1st)");
