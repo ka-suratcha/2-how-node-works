@@ -9,6 +9,21 @@ server.on('request', (req, res) => {
         if (err) console.log(err);
         res.end(data);
     })
+
+    // SOLUTION 2 streams
+    // read one chuck of file then send to client using write method unit entire file is readed
+    const readable = fs.createReadStream('testt-file.txt')
+    readable.on('data', chunk => {
+        res.write(chunk);
+    })
+    readable.on('end', () => {
+        res.end();
+    })
+    readable.on('error', err => {
+        console.log(err);
+        res.statusCode = 500
+        res.end('File not found!')
+    })
 })
 
 server.listen(8000, '127.0.0.1', () => {
